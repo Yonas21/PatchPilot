@@ -1,3 +1,4 @@
+import type { DependencyGraph } from './workbench.js';
 export type Severity = 'critical' | 'high' | 'moderate' | 'low' | 'unknown';
 export type ScanStatus =
   'queued' | 'fetching' | 'scanning' | 'summarizing' | 'completed' | 'partial' | 'failed';
@@ -13,6 +14,7 @@ export interface SkippedDependency {
   reason: string;
 }
 export interface ParsedInventory {
+  graph?: DependencyGraph;
   packages: Dependency[];
   skipped: SkippedDependency[];
 }
@@ -61,6 +63,10 @@ export interface Finding {
   briefError?: string;
 }
 export interface Scan {
+  snapshot?: Dependency[];
+  graph?: DependencyGraph;
+  purpose?: 'source' | 'candidate';
+  planId?: string;
   id: string;
   inventoryId: string;
   status: ScanStatus;

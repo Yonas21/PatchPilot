@@ -1,15 +1,37 @@
+import type {
+  ReleasePolicy,
+  RiskException,
+  ReleaseDecision,
+  VersionCheck,
+} from '../shared/release.js';
+import type { RemediationPlan } from '../shared/workbench.js';
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import type { Activity, Inventory, Scan, Ticket } from '../shared/types.js';
 
 interface Tables {
+  policies: ReleasePolicy;
+  exceptions: RiskException;
+  decisions: ReleaseDecision;
+  versionChecks: VersionCheck;
+  plans: RemediationPlan;
   inventories: Inventory;
   scans: Scan;
   tickets: Ticket;
   activity: Activity;
 }
 type Table = keyof Tables;
-const tables: Table[] = ['inventories', 'scans', 'tickets', 'activity'];
+const tables: Table[] = [
+  'inventories',
+  'scans',
+  'tickets',
+  'activity',
+  'plans',
+  'policies',
+  'exceptions',
+  'decisions',
+  'versionChecks',
+];
 
 export class Store {
   private db: DatabaseSync;
