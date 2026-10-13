@@ -1,4 +1,9 @@
-const hosts = new Set(['api.osv.dev', 'api.github.com', 'generativelanguage.googleapis.com']);
+const hosts = new Set([
+  'registry.npmjs.org',
+  'api.osv.dev',
+  'api.github.com',
+  'generativelanguage.googleapis.com',
+]);
 
 export async function fetchJson(
   url: string,
