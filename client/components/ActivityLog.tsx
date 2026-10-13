@@ -1,3 +1,4 @@
+import { PagedList } from './Pagination';
 import { Activity as ActivityIcon, Clock3, Sparkles } from 'lucide-react';
 import type { Dashboard } from '../../shared/types';
 import { dateTime } from '../api';
@@ -17,26 +18,30 @@ export function ActivityLog({ data }: { data: Dashboard }) {
       </div>
       <section className="panel">
         {data.activity.length ? (
-          <div className="event-list">
-            {data.activity.map((event) => (
-              <article className="event-row" key={event.id}>
-                <span className={`activity-symbol ${event.kind}`}>
-                  {event.kind === 'ai' ? (
-                    <Sparkles size={17} />
-                  ) : event.kind === 'monitor' ? (
-                    <Clock3 size={17} />
-                  ) : (
-                    <ActivityIcon size={17} />
-                  )}
-                </span>
-                <div>
-                  <h3>{event.title}</h3>
-                  <p>{event.detail}</p>
-                </div>
-                <time>{dateTime(event.createdAt)}</time>
-              </article>
-            ))}
-          </div>
+          <PagedList items={data.activity} label="Activity events" size={25}>
+            {(pageItems) => (
+              <div className="event-list">
+                {pageItems.map((event) => (
+                  <article className="event-row" key={event.id}>
+                    <span className={`activity-symbol ${event.kind}`}>
+                      {event.kind === 'ai' ? (
+                        <Sparkles size={17} />
+                      ) : event.kind === 'monitor' ? (
+                        <Clock3 size={17} />
+                      ) : (
+                        <ActivityIcon size={17} />
+                      )}
+                    </span>
+                    <div>
+                      <h3>{event.title}</h3>
+                      <p>{event.detail}</p>
+                    </div>
+                    <time>{dateTime(event.createdAt)}</time>
+                  </article>
+                ))}
+              </div>
+            )}
+          </PagedList>
         ) : (
           <Empty
             title="Your activity trail is ready"

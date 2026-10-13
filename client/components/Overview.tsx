@@ -1,3 +1,4 @@
+import { PagedList } from './Pagination';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -191,31 +192,35 @@ export function Overview({
             </button>
           </div>
           {rows.length ? (
-            <div className="priority-list">
-              {rows.slice(0, 5).map((row) => (
-                <button
-                  key={`${row.scan.id}:${row.finding.key}`}
-                  className="priority-row"
-                  onClick={() => onSelect(row)}
-                >
-                  <div className="package-icon">
-                    <Boxes size={18} />
-                  </div>
-                  <div className="priority-info">
-                    <strong>
-                      {row.finding.dependency.name}
-                      <span>@{row.finding.dependency.version}</span>
-                    </strong>
-                    <small>
-                      {row.stale ? 'Earlier evidence · ' : ''}
-                      {row.finding.advisory.summary}
-                    </small>
-                  </div>
-                  <Badge severity={row.finding.advisory.severity} />
-                  <ArrowUpRight className="row-arrow" size={17} />
-                </button>
-              ))}
-            </div>
+            <PagedList items={rows} label="Priority findings" size={5}>
+              {(pageItems) => (
+                <div className="priority-list">
+                  {pageItems.map((row) => (
+                    <button
+                      key={`${row.scan.id}:${row.finding.key}`}
+                      className="priority-row"
+                      onClick={() => onSelect(row)}
+                    >
+                      <div className="package-icon">
+                        <Boxes size={18} />
+                      </div>
+                      <div className="priority-info">
+                        <strong>
+                          {row.finding.dependency.name}
+                          <span>@{row.finding.dependency.version}</span>
+                        </strong>
+                        <small>
+                          {row.stale ? 'Earlier evidence · ' : ''}
+                          {row.finding.advisory.summary}
+                        </small>
+                      </div>
+                      <Badge severity={row.finding.advisory.severity} />
+                      <ArrowUpRight className="row-arrow" size={17} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </PagedList>
           ) : (
             <Empty
               title="Your triage queue starts here"
@@ -238,20 +243,24 @@ export function Overview({
             <span className="status-dot" />
           </div>
           {data.activity.length ? (
-            <div className="activity-list">
-              {data.activity.slice(0, 4).map((event) => (
-                <div className="activity-item" key={event.id}>
-                  <span className={`activity-symbol ${event.kind}`}>
-                    <CheckCheck size={14} />
-                  </span>
-                  <div>
-                    <strong>{event.title}</strong>
-                    <p>{event.detail}</p>
-                    <time>{timeAgo(event.createdAt)}</time>
-                  </div>
+            <PagedList items={data.activity} label="Recent activity" size={4}>
+              {(pageItems) => (
+                <div className="activity-list">
+                  {pageItems.map((event) => (
+                    <div className="activity-item" key={event.id}>
+                      <span className={`activity-symbol ${event.kind}`}>
+                        <CheckCheck size={14} />
+                      </span>
+                      <div>
+                        <strong>{event.title}</strong>
+                        <p>{event.detail}</p>
+                        <time>{timeAgo(event.createdAt)}</time>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+            </PagedList>
           ) : (
             <div className="quiet-state">
               <Clock3 size={24} />

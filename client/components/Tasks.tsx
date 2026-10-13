@@ -1,3 +1,4 @@
+import { PagedList } from './Pagination';
 import { ArrowUpRight, CheckCheck, Download, FileCheck2 } from 'lucide-react';
 import type { Dashboard } from '../../shared/types';
 import { dateTime, patch, type RunAction } from '../api';
@@ -44,58 +45,62 @@ export function Tasks({
           />
         </section>
       ) : (
-        <div className="task-list">
-          {data.tickets.map((ticket) => (
-            <section className={`panel task-card ${ticket.status}`} key={ticket.id}>
-              <div className="task-card-main">
-                <span className={`task-state ${ticket.status}`}>
-                  <CheckCheck size={20} />
-                </span>
-                <div>
-                  <button className="task-title" onClick={() => onInspect(ticket.id)}>
-                    {ticket.title}
-                  </button>
-                  <p>
-                    {data.inventories.find((item) => item.id === ticket.inventoryId)?.name} ·
-                    Approved {dateTime(ticket.createdAt)}
-                  </p>
-                </div>
-                <span className={`tag ${ticket.status === 'done' ? 'tag-green' : ''}`}>
-                  {ticket.status}
-                </span>
-              </div>
-              <div className="task-actions">
-                <button className="text-button" onClick={() => onInspect(ticket.id)}>
-                  Read task
-                  <ArrowUpRight size={15} />
-                </button>
-                <a
-                  className="button button-outline"
-                  href={`/api/tickets/${ticket.id}/export`}
-                  download
-                >
-                  <Download size={15} />
-                  Export Markdown
-                </a>
-                <button
-                  disabled={busy}
-                  className="button button-primary"
-                  onClick={() =>
-                    void run(
-                      () =>
-                        patch(`/tickets/${ticket.id}`, {
-                          status: ticket.status === 'done' ? 'open' : 'done',
-                        }),
-                      'Task updated',
-                    )
-                  }
-                >
-                  {ticket.status === 'done' ? 'Reopen task' : 'Mark done'}
-                </button>
-              </div>
-            </section>
-          ))}
-        </div>
+        <PagedList items={data.tickets} label="Tasks" size={10}>
+          {(pageItems) => (
+            <div className="task-list">
+              {pageItems.map((ticket) => (
+                <section className={`panel task-card ${ticket.status}`} key={ticket.id}>
+                  <div className="task-card-main">
+                    <span className={`task-state ${ticket.status}`}>
+                      <CheckCheck size={20} />
+                    </span>
+                    <div>
+                      <button className="task-title" onClick={() => onInspect(ticket.id)}>
+                        {ticket.title}
+                      </button>
+                      <p>
+                        {data.inventories.find((item) => item.id === ticket.inventoryId)?.name} ·
+                        Approved {dateTime(ticket.createdAt)}
+                      </p>
+                    </div>
+                    <span className={`tag ${ticket.status === 'done' ? 'tag-green' : ''}`}>
+                      {ticket.status}
+                    </span>
+                  </div>
+                  <div className="task-actions">
+                    <button className="text-button" onClick={() => onInspect(ticket.id)}>
+                      Read task
+                      <ArrowUpRight size={15} />
+                    </button>
+                    <a
+                      className="button button-outline"
+                      href={`/api/tickets/${ticket.id}/export`}
+                      download
+                    >
+                      <Download size={15} />
+                      Export Markdown
+                    </a>
+                    <button
+                      disabled={busy}
+                      className="button button-primary"
+                      onClick={() =>
+                        void run(
+                          () =>
+                            patch(`/tickets/${ticket.id}`, {
+                              status: ticket.status === 'done' ? 'open' : 'done',
+                            }),
+                          'Task updated',
+                        )
+                      }
+                    >
+                      {ticket.status === 'done' ? 'Reopen task' : 'Mark done'}
+                    </button>
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </PagedList>
       )}
     </>
   );
