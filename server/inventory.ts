@@ -1,3 +1,4 @@
+import { dependencyGraph } from './dependency-graph.js';
 import semver from 'semver';
 import { z } from 'zod';
 import type { ParsedInventory } from '../shared/types.js';
@@ -29,7 +30,11 @@ export function parseLockfile(input: unknown): ParsedInventory {
       : root.data.packages;
   const parsed = z.record(z.string(), entrySchema).safeParse(packages);
   if (!parsed.success) throw new Error('The lockfile packages field is missing or malformed.');
-  const result: ParsedInventory = { packages: [], skipped: [] };
+  const result: ParsedInventory = {
+    packages: [],
+    skipped: [],
+    graph: dependencyGraph(parsed.data, root.data.lockfileVersion === 1),
+  };
   const unique = new Map<string, ParsedInventory['packages'][number]>();
   for (const [location, entry] of Object.entries(parsed.data)) {
     if (!location) continue;
