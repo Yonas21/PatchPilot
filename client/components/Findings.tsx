@@ -1,26 +1,38 @@
+import { Pagination } from './Pagination';
+import { usePagination } from '../hooks/usePagination';
 import { useState } from 'react';
 import { ArrowUpRight, Boxes, Filter, Sparkles } from 'lucide-react';
+import type { Inventory } from '../../shared/types';
 import type { FindingRow } from './Overview';
 import { Badge, Empty, SearchBox } from './Shared';
 
 export function Findings({
   rows,
+  inventories,
   onSelect,
   onAdd,
 }: {
   rows: FindingRow[];
+  inventories: Pick<Inventory, 'id' | 'name'>[];
   onSelect: (row: FindingRow) => void;
   onAdd: () => void;
 }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  const [inventoryId, setInventoryId] = useState('all');
+  const projects = [...inventories].sort(
+    (a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id),
+  );
+  const query = search.trim().toLowerCase();
   const filtered = rows.filter(
     (row) =>
+      (inventoryId === 'all' || row.scan.inventoryId === inventoryId) &&
       (filter === 'all' || row.finding.advisory.severity === filter) &&
       `${row.finding.dependency.name} ${row.finding.advisory.id} ${row.finding.advisory.summary} ${row.inventoryName}`
         .toLowerCase()
-        .includes(search.toLowerCase()),
+        .includes(query),
   );
+  const pagination = usePagination(filtered, 25, JSON.stringify([search, filter, inventoryId]));
   return (
     <>
       <div className="page-heading">
@@ -37,16 +49,42 @@ export function Findings({
         </span>
       </div>
       <section className="panel">
-        <div className="toolbar">
+        <div className="toolbar triage-toolbar">
           <SearchBox
             value={search}
-            onChange={setSearch}
+            onChange={(value) => {
+              setSearch(value);
+            }}
             placeholder="Search packages, advisories, inventories…"
           />
+          <label className="filter-select triage-project-filter">
+            <span className="sr-only">Filter by inventory or project</span>
+            <select
+              value={inventoryId}
+              onChange={(event) => {
+                setInventoryId(event.target.value);
+              }}
+            >
+              <option value="all">All inventories / projects</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                  {projects.some((other) => other.id !== project.id && other.name === project.name)
+                    ? ` (${project.id.slice(0, 8)})`
+                    : ''}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="filter-select">
             <Filter size={16} />
             <span className="sr-only">Filter by severity</span>
-            <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+            <select
+              value={filter}
+              onChange={(event) => {
+                setFilter(event.target.value);
+              }}
+            >
               <option value="all">All severities</option>
               <option value="critical">Critical</option>
               <option value="high">High</option>
@@ -71,7 +109,7 @@ export function Findings({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((row) => (
+                {pagination.items.map((row) => (
                   <tr key={`${row.scan.id}:${row.finding.key}`}>
                     <td>
                       <button className="table-package" onClick={() => onSelect(row)}>
@@ -125,7 +163,7 @@ export function Findings({
             title={rows.length ? 'No matching findings' : 'No findings to review'}
             description={
               rows.length
-                ? 'Try another package name or severity filter.'
+                ? 'Try another search, inventory, or severity filter.'
                 : 'Add an inventory and complete a scan to see its published vulnerability matches.'
             }
             action={
@@ -137,9 +175,10 @@ export function Findings({
             }
           />
         )}
+        <Pagination pagination={pagination} label="Findings" sizes={[25, 50, 100]} />
         <div className="table-footer">
-          {filtered.length} of {rows.length} findings · Latest available results per inventory.
-          Incomplete coverage is flagged above.
+          {filtered.length} matching of {rows.length} total findings. Latest available results per
+          inventory. Incomplete coverage is flagged above.
         </div>
       </section>
     </>

@@ -16,6 +16,9 @@ import './styles/forms.css';
 import './styles/finding-detail.css';
 import './styles/settings.css';
 import './styles/responsive-forms.css';
+import './styles/workbench.css';
+import './styles/workbench-responsive.css';
+import './styles/release.css';
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

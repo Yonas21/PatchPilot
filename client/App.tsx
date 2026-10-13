@@ -11,7 +11,7 @@ import { Findings } from './components/Findings';
 import { ActivityLog } from './components/ActivityLog';
 import { Inventories } from './components/Inventories';
 import { Settings } from './components/Settings';
-import { Tasks } from './components/Tasks';
+import { Remediation } from './components/Remediation';
 import { Modal, Spinner } from './components/Shared';
 
 const views: View[] = ['overview', 'findings', 'inventories', 'tasks', 'activity'];
@@ -217,12 +217,19 @@ export function App() {
             />
           )}
           {view === 'findings' && (
-            <Findings rows={rows} onSelect={select} onAdd={() => setAdd(true)} />
+            <Findings
+              inventories={data.inventories}
+              rows={rows}
+              onSelect={select}
+              onAdd={() => setAdd(true)}
+            />
           )}
           {view === 'inventories' && (
             <Inventories data={data} onAdd={() => setAdd(true)} run={run} busy={busy} />
           )}
-          {view === 'tasks' && <Tasks data={data} run={run} busy={busy} onInspect={setTaskId} />}
+          {view === 'tasks' && (
+            <Remediation data={data} run={run} busy={busy} onInspect={setTaskId} />
+          )}
           {view === 'activity' && <ActivityLog data={data} />}
           {settings && <Settings data={data} onClose={() => setSettings(false)} />}
           {selectedRow && (
