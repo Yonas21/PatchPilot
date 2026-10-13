@@ -1,0 +1,67 @@
+.provider-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--border);
+}
+.provider-card > div {
+  flex: 1;
+}
+.provider-icon {
+  display: grid;
+  place-items: center;
+  background: #f2f6eb;
+  border: 1px solid #e1e8d5;
+  width: 43px;
+  height: 43px;
+  color: #6c8559;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+.provider-card h3 {
+  font-size: 13px;
+  margin: 0 0 5px;
+}
+.provider-card p {
+  font-size: 10px;
+  margin: 0;
+  color: var(--muted);
+}
+.setup-guide {
+  padding: 23px 0 10px;
+}
+.setup-guide h3 {
+  font-size: 14px;
+}
+.setup-guide ol {
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.setup-guide li {
+  margin-bottom: 8px;
+}
+.setup-guide p {
+  font-size: 11px;
+  color: var(--muted);
+}
+.task-preview {
+  white-space: pre-wrap;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.skipped-details {
+  margin-bottom: 14px;
+  font-size: 11px;
+}
+.skipped-details ul {
+  padding: 0 20px 0 28px;
+  line-height: 1.8;
+}
+.skipped-details p {
+  padding: 0 14px;
+  font-size: 11px;
+}

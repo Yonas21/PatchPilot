@@ -1,0 +1,56 @@
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 16px 20px;
+  background: #224f3b;
+  color: white;
+  box-shadow: 0 7px 30px #183e3626;
+  font-size: 13px;
+  border-radius: 8px;
+  z-index: 25;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: calc(100vw - 36px);
+}
+.scan-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e9f2e5;
+  border: 1px solid #d7e4d0;
+  padding: 13px 16px;
+  border-radius: 7px;
+  margin-bottom: 24px;
+  color: #4d7347;
+  font-size: 11px;
+}
+.scan-progress > span:last-child {
+  margin-left: auto;
+  font-size: 10px;
+}
+.coverage-warning {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 15px 17px;
+  border: 1px solid #ebdfbb;
+  background: #fcf7e8;
+  border-radius: 7px;
+  margin-bottom: 22px;
+  color: #806a36;
+}
+.coverage-warning svg {
+  flex-shrink: 0;
+}
+.coverage-warning strong {
+  font-size: 11px;
+}
+.coverage-warning p {
+  font-size: 10px;
+  margin: 3px 0 0;
+}
+.coverage-warning .text-button {
+  margin-left: auto;
+}

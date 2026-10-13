@@ -1,0 +1,141 @@
+.finding-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.finding-meta code {
+  color: #6a7b5e;
+  margin-left: auto;
+  font-size: 11px;
+}
+.advisory-title {
+  font-size: 21px;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+.ai-brief {
+  margin-top: 23px;
+  padding: 21px;
+  border: 1px solid #dce6d2;
+  background: #f6f9f0;
+  border-radius: 9px;
+}
+.ai-brief-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.ai-brief-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin: 0;
+  color: #517745;
+}
+.ai-brief p {
+  font-size: 12px;
+}
+.ai-brief h4 {
+  margin: 20px 0 8px;
+  font-size: 12px;
+}
+.ai-brief ol,
+.ai-brief ul {
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.ai-brief li {
+  margin-bottom: 7px;
+}
+.ai-brief .footnote {
+  font-size: 10px;
+  margin-bottom: 0;
+}
+.detail-section {
+  padding-top: 24px;
+}
+.detail-section h3 {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.version-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.version-list code {
+  border: 1px solid var(--border);
+  background: #f7f9f3;
+  padding: 5px 9px;
+  border-radius: 5px;
+}
+.source-links {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 20px;
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #377151;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.text-link:hover {
+  text-decoration: underline;
+}
+details {
+  background: #fbfcf9;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 12px;
+}
+summary {
+  padding: 13px;
+  cursor: pointer;
+  color: #5d7650;
+}
+.advisory-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0 15px;
+  font-size: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.back-link {
+  margin: -10px 0 13px;
+}
+.field .draft-body {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.saved-task {
+  text-align: center;
+  padding: 30px 10px;
+}
+.success-icon {
+  display: grid;
+  place-items: center;
+  margin: 0 auto 20px;
+  width: 65px;
+  height: 65px;
+  background: #ecf5e4;
+  color: #659449;
+  border: 1px solid #d7e8c8;
+  border-radius: 50%;
+}
+.saved-task p {
+  font-size: 13px;
+}
+.saved-task .text-button {
+  display: flex;
+  margin: 15px auto 0;
+}

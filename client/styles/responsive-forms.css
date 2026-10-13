@@ -1,0 +1,56 @@
+@media (max-width: 700px) {
+  .modal {
+    max-height: calc(100dvh - 24px);
+    width: calc(100% - 20px);
+    border-radius: 11px;
+  }
+  .modal-header {
+    padding: 22px 20px 18px;
+  }
+  .modal-content {
+    padding: 22px 20px;
+  }
+  .modal-header h2 {
+    font-size: 21px;
+  }
+  .source-options {
+    gap: 7px;
+  }
+  .source-options button {
+    font-size: 10px;
+  }
+  .modal-actions {
+    flex-wrap: wrap;
+  }
+  .modal-actions > .muted {
+    flex-basis: 100%;
+  }
+  .form-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .finding-meta code {
+    margin-left: 0;
+    font-size: 10px;
+  }
+  .ai-brief {
+    padding: 17px;
+  }
+  .ai-brief-heading {
+    flex-wrap: wrap;
+  }
+  .toolbar {
+    flex-wrap: wrap;
+    padding: 15px;
+  }
+  .search-box {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .provider-card {
+    gap: 8px;
+  }
+  .provider-card .tag {
+    font-size: 8px;
+  }
+}

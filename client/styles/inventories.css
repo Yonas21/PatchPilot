@@ -1,0 +1,143 @@
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.inventory-card {
+  padding: 24px;
+}
+.inventory-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 15px;
+}
+.inventory-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+  background: #f1f5eb;
+  color: #6b885c;
+  border: 1px solid #e1e8d8;
+}
+.inventory-card h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+.inventory-context {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 40px;
+  overflow-wrap: anywhere;
+}
+.inventory-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 24px 0;
+}
+.inventory-metrics strong {
+  display: block;
+  font-size: 22px;
+}
+.inventory-metrics small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.repo-info {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.repo-info code {
+  font-size: 10px;
+  color: var(--muted);
+}
+.inventory-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 10px;
+  padding: 13px 0;
+  border-top: 1px solid var(--border);
+}
+.inventory-status > strong {
+  font-weight: 500;
+  text-transform: capitalize;
+  text-align: right;
+}
+.monitor-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 17px 0;
+  border-top: 1px solid var(--border);
+}
+.monitor-line > svg {
+  color: #7b8b70;
+  flex-shrink: 0;
+}
+.monitor-line strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 550;
+}
+.monitor-line small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.toggle {
+  margin-left: auto;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  position: relative;
+}
+.toggle::before {
+  content: '';
+  position: absolute;
+  inset: 11px 0;
+  background: #dce3d6;
+  border-radius: 15px;
+  transition: background 0.2s;
+}
+.toggle.on::before {
+  background: #37775b;
+}
+.toggle span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 14px;
+  left: 3px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px #0002;
+  transition: left 0.2s;
+}
+.toggle.on span {
+  left: 25px;
+}
+.inventory-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 15px;
+}
+.inventory-actions .footnote {
+  margin: 0;
+  font-size: 9px;
+}

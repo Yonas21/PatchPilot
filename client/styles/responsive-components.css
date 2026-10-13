@@ -1,0 +1,76 @@
+@media (max-width: 1100px) {
+  .inventory-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .panel-header {
+    padding: 18px;
+  }
+  .priority-row {
+    padding: 17px 15px;
+    gap: 9px;
+  }
+  .priority-row .row-arrow {
+    display: none;
+  }
+  .priority-info strong {
+    font-size: 11px;
+  }
+  .priority-info strong > span {
+    font-size: 9px;
+  }
+  .priority-row .badge {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  .package-icon {
+    width: 29px;
+    height: 29px;
+  }
+  .integration-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 17px;
+  }
+  .integration-strip .text-button {
+    margin-left: 34px;
+  }
+  .task-card {
+    padding: 17px;
+  }
+  .task-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .task-actions .text-button {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+  .event-row {
+    padding: 18px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .event-row time {
+    margin-left: 38px;
+  }
+  .event-row > div {
+    min-width: calc(100% - 40px);
+  }
+  .toast {
+    bottom: 80px;
+    right: 18px;
+  }
+  .scan-progress > span:last-child {
+    display: none;
+  }
+  .scan-progress > svg {
+    flex-shrink: 0;
+  }
+  .page-heading > .button {
+    font-size: 10px;
+    padding: 8px;
+  }
+}
