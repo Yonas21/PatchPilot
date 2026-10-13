@@ -1,5 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import { activeStatuses, type Finding, type Inventory, type Scan } from '../shared/types.js';
+import {
+  activeStatuses,
+  type Finding,
+  type Inventory,
+  type Scan,
+  type ParsedInventory,
+} from '../shared/types.js';
 import { parseLockfile } from './inventory.js';
 import { scanDependencies } from './providers/osv.js';
 import { generateBrief, geminiConfig } from './providers/gemini.js';
@@ -79,13 +85,21 @@ export class Agent {
     return { inventory, scan: this.startScan(inventory.id) };
   }
 
-  startScan(inventoryId: string, trigger: Scan['trigger'] = 'manual'): Scan {
+  startScan(
+    inventoryId: string,
+    trigger: Scan['trigger'] = 'manual',
+    candidate?: { parsed: ParsedInventory; planId: string },
+  ): Scan {
     const inventory = this.store.get('inventories', inventoryId);
     if (!inventory) throw new Error('Inventory not found.');
     const existing = this.store
       .list('scans')
       .find((scan) => scan.inventoryId === inventoryId && activeStatuses.includes(scan.status));
-    if (existing) return existing;
+    if (existing) {
+      if (candidate || existing.purpose === 'candidate')
+        throw new Error('Wait for this inventory scan to finish.');
+      return existing;
+    }
     if (this.running.size >= 2)
       throw new Error('Two scans are already running. Wait for one to finish.');
     const scan: Scan = {
@@ -93,6 +107,8 @@ export class Agent {
       inventoryId,
       trigger,
       status: 'queued',
+      purpose: candidate ? 'candidate' : 'source',
+      planId: candidate?.planId,
       createdAt: new Date().toISOString(),
       total: inventory.packages.length,
       scanned: 0,
@@ -111,7 +127,7 @@ export class Agent {
       inventory.name,
     );
     const pending = Promise.resolve()
-      .then(() => this.execute(scan.id))
+      .then(() => this.execute(scan.id, candidate?.parsed))
       .finally(() => this.running.delete(inventoryId));
     this.running.set(inventoryId, pending);
     return scan;
@@ -123,10 +139,11 @@ export class Agent {
     return this.store.put('scans', { ...existing, ...changes });
   }
 
-  private async execute(scanId: string) {
+  private async execute(scanId: string, candidate?: ParsedInventory) {
     const initial = this.store.get('scans', scanId)!;
     let inventory = this.store.get('inventories', initial.inventoryId)!;
     try {
+      if (candidate) inventory = { ...inventory, ...candidate, repository: undefined };
       if (inventory.repository) {
         this.update(scanId, { status: 'fetching' });
         const result = await this.providers.repository(inventory.repository);
@@ -142,6 +159,8 @@ export class Agent {
       }
       this.update(scanId, {
         status: 'scanning',
+        snapshot: inventory.packages,
+        graph: inventory.graph,
         total: inventory.packages.length,
         skipped: inventory.skipped,
         repositorySha: inventory.repository?.sha,
@@ -153,7 +172,10 @@ export class Agent {
         .list('scans')
         .find(
           (scan) =>
-            scan.inventoryId === inventory.id && scan.id !== scanId && scan.status === 'completed',
+            scan.inventoryId === inventory.id &&
+            scan.id !== scanId &&
+            scan.purpose !== 'candidate' &&
+            scan.status === 'completed',
         );
       const oldKeys = new Set(previous?.findings.map((finding) => finding.key));
       const keys = new Set(result.findings.map((finding) => finding.key));

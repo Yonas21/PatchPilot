@@ -8,7 +8,9 @@ export interface EvidenceRow {
 
 // Scans arrive newest first. Partial coverage cannot retire older evidence.
 export function selectInventoryFindings(scans: Scan[], inventoryId: string): EvidenceRow[] {
-  const history = scans.filter((scan) => scan.inventoryId === inventoryId);
+  const history = scans.filter(
+    (scan) => scan.inventoryId === inventoryId && scan.purpose !== 'candidate',
+  );
   const rows = new Map<string, EvidenceRow>();
   for (const scan of history) {
     for (const finding of scan.findings) {
@@ -21,9 +23,12 @@ export function selectInventoryFindings(scans: Scan[], inventoryId: string): Evi
 }
 
 export function dashboardScans(scans: Scan[]): Scan[] {
+  scans = scans.filter((scan) => scan.purpose !== 'candidate');
   const keep = new Set(scans.slice(0, 60).map((scan) => scan.id));
   for (const inventoryId of new Set(scans.map((scan) => scan.inventoryId))) {
-    const history = scans.filter((scan) => scan.inventoryId === inventoryId);
+    const history = scans.filter(
+      (scan) => scan.inventoryId === inventoryId && scan.purpose !== 'candidate',
+    );
     if (history[0]) keep.add(history[0].id);
     for (const scan of history) {
       if (scan.findings.length || scan.status === 'completed') keep.add(scan.id);
