@@ -234,3 +234,39 @@ Estimated implementation and handoff effort: **4 hours 10 minutes–6 hours 5 mi
 9. Gemini API pricing: https://ai.google.dev/gemini-api/docs/pricing
 10. Gemini API rate limits: https://ai.google.dev/gemini-api/docs/rate-limits
 11. Google Cloud billing requirement: https://docs.cloud.google.com/docs/get-started/learn-about-billing
+
+## 13. Local remediation workbench upgrade — 13 October 2026
+
+User-approved direction: retain local execution and Gemini as the sole required key; deepen remediation planning, comparison, and verification.
+
+### Product outcome
+
+An engineer can move from a noisy scan to an approved package-level remediation plan, inspect dependency paths and upgrade candidates, then verify a later repository scan or uploaded candidate lockfile against that immutable baseline. Verification means published advisory matches are no longer detected under complete scan coverage; it never means application exploitability or compatibility has been proved.
+
+### Implementation sequence
+
+1. Preserve dependency graph metadata and immutable package snapshots on new scans. Resolve npm dependency edges using installed locations; treat missing root declarations, unresolved edges, and legacy lockfiles as explicit limitations.
+2. Build package/version-level plans from completed scans. Group related advisory findings, rank with published severity and runtime scope, show evidence paths, and distinguish direct upgrade from parent-dependency investigation. Save immutable drafts and explicit approvals with audit events.
+3. Compare approved baselines against later scans. Match advisories across aliases and versions, show persistent/new/no-longer-detected findings, and block closure claims for partial, failed, older, or mismatched scans. Candidate uploads run separately from the monitored source.
+4. Add a remediation workbench with plan review, candidate upload, scan comparison, exports, and a guided demonstration using clearly labeled synthetic inputs and live provider results.
+5. Verify parsing/graph boundaries, state transitions, provenance, deduplication, and incomplete coverage; run build and regression tests and review the implementation.
+
+### Acceptance criteria
+
+- No findings disappear just because an installed version changed while the same advisory remains.
+- Approval records the actual plan shown to the user; newer source scans invalidate approval of stale drafts.
+- Candidate verification cannot overwrite monitored repository configuration or masquerade as a production/source scan.
+- Imported repository files are treated as data, never executed. Suggested upgrade versions remain unverified candidates until checked; test execution and automatic patch application are not part of this scope.
+- Existing saved inventories, tasks, and scans remain readable. Historical scans without package snapshots cannot support new verification claims.
+- The demo shows the before/after workflow with actual counts and recorded provenance, without invented savings or fabricated scanner results.
+
+## 14. Release review and upgrade evidence — 13 October 2026
+
+Following the request for greater product value, extend the local workbench with:
+
+1. **Candidate version checks:** validate that an advisory-suggested version exists in the public npm registry, query live OSV for that exact version, persist the evidence and timestamp, and distinguish no published matches from provider failure. This does not prove compatibility or an entire dependency tree is safe.
+2. **Release criteria:** configurable severity threshold, development dependency scope, unknown-severity handling, and maximum evidence age. Incomplete, missing, stale, or superseded source evidence prevents a passing decision. Candidate decisions are labeled experiments.
+3. **Time-limited exceptions:** explicitly approve a reason, owner, and expiry for one finding/version in one inventory. Expiry/revocation restores the blocker; findings remain visible and scans remain unchanged. No authenticated identity is claimed in a local single-user app.
+4. **Decision records:** persist the exact policy, exceptions, evidence provenance, and evaluated outcome, and export the result for review. Historical records describe the decision at that time and do not continuously authorize release.
+
+Implementation: pure policy evaluator and contracts → provider-backed candidate checks → validated local routes/persistence → candidate controls and release-review UI → failure/expiry/provenance tests → live and browser verification. No project code execution, deployment, external messaging, or GitHub writes.
