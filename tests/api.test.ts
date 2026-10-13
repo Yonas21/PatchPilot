@@ -57,6 +57,38 @@ test('local API requires session and approval, rejects foreign origins, and expo
     assert.equal(created.status, 201);
     const { scan } = await created.json();
     await agent.idle();
+    const planResponse = await fetch(`${base}/workbench/plans`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ scanId: scan.id }),
+    });
+    assert.equal(planResponse.status, 201);
+    const plan = await planResponse.json();
+    const summary = await fetch(`${base}/workbench`).then((r) => r.json());
+    assert.equal(summary.plans[0].findingCount, 1);
+    assert.equal('snapshot' in summary.plans[0], false);
+    assert.equal(summary.scans[0].hasSnapshot, true);
+    assert.equal('findings' in summary.scans[0], false);
+    const premature = await fetch(`${base}/workbench/plans/${plan.id}/candidate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ lockfile: {} }),
+    });
+    assert.equal(premature.status, 400);
+    const noApproval = await fetch(`${base}/workbench/plans/${plan.id}/approve`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ approved: false }),
+    });
+    assert.equal(noApproval.status, 400);
+    const approval = await fetch(`${base}/workbench/plans/${plan.id}/approve`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ approved: true }),
+    });
+    assert.equal(approval.status, 200);
+    const planExport = await fetch(`${base}/workbench/plans/${plan.id}/export`);
+    assert.match(await planExport.text(), /Package changes/);
     const input = {
       scanId: scan.id,
       findingKey: finding.key,
@@ -96,6 +128,11 @@ test('local API requires session and approval, rejects foreign origins, and expo
       body: JSON.stringify({ status: 'invented' }),
     });
     assert.equal(invalidStatus.status, 400);
+    for (let i = 0; i < 85; i++) store.event('scan', `History ${i}`, 'Pagination coverage');
+    const dashboard = await fetch(`${base}/dashboard`).then((response) => response.json());
+    assert.equal(dashboard.activity.length, store.list('activity').length);
+    assert.ok(dashboard.activity.some((event: { title: string }) => event.title === 'History 0'));
+    assert.equal(dashboard.activity[0].title, 'History 84');
   } finally {
     server.closeAllConnections();
     await new Promise<void>((resolve, reject) =>

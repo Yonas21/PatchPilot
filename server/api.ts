@@ -1,3 +1,5 @@
+import { releaseRoutes } from './release/routes.js';
+import { workbenchRoutes } from './workbench/routes.js';
 import { Router, type ErrorRequestHandler } from 'express';
 import { randomBytes } from 'node:crypto';
 import { z } from 'zod';
@@ -33,6 +35,8 @@ export function createApi(store: Store, agent: Agent, allowedOrigins: Set<string
     }
     next();
   });
+  router.use('/release', releaseRoutes(store));
+  router.use('/workbench', workbenchRoutes(store, agent));
   router.get('/session', (_req, res) => res.json({ session }));
   router.get('/dashboard', (_req, res) => {
     const config = geminiConfig();
@@ -40,7 +44,7 @@ export function createApi(store: Store, agent: Agent, allowedOrigins: Set<string
       inventories: store.list('inventories'),
       scans: dashboardScans(store.list('scans')),
       tickets: store.list('tickets'),
-      activity: store.list('activity').slice(0, 80),
+      activity: store.list('activity'),
       integrations: { gemini: !!config.key, model: config.model },
     });
   });
