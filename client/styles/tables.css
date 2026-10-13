@@ -109,3 +109,48 @@ tbody tr:hover {
   color: #7c8873;
   font-size: 10px;
 }
+
+.triage-toolbar {
+  flex-wrap: wrap;
+}
+.triage-project-filter {
+  max-width: 100%;
+  min-width: 0;
+}
+.triage-project-filter select {
+  max-width: 260px;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+.triage-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.triage-pagination p {
+  margin: 0;
+}
+.triage-page-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.triage-page-controls .button {
+  min-height: 36px;
+  padding: 8px 10px;
+}
+@media (max-width: 700px) {
+  .triage-page-controls {
+    width: 100%;
+  }
+  .triage-project-filter {
+    width: 100%;
+  }
+  .triage-project-filter select {
+    width: 100%;
+    max-width: 100%;
+  }
+}
